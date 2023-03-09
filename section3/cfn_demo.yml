@@ -10,6 +10,42 @@ Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      Keyname: !Ref KeyName
+      KeyName: !Ref KeyName
       InstanceType: "t2.micro"
-      ImageId: !Ref 
+      ImageId: !Ref LatestAmiId
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access via port 22 and 80
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0 
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  InstanceId:
+    Description: InstanceId of created EC2 instance
+    Value: !Ref EC2Instance
+  AZ:
+    Description: AZ of created EC2 instance
+    Value: !GetAtt
+      - EC2Instance
+      - AvailabilityZone
+  PublicDNS:
+    Description: Public DNS of created EC2 instance
+    Value: !GetAtt
+      - EC2Instance
+      - PublicDnsName
+  PublicIP:
+    Description: Public IP of created EC2 instance
+    Value: !GetAtt
+      - EC2Instance
+      - PublicIp
