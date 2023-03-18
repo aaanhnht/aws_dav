@@ -1,31 +1,31 @@
 Resources:
   # Lambda can have full access to s3
   IAMS3FullAccessRole:
-    Type: 'AWS::IAM::Role'
+    Type: "AWS::IAM::Role"
     Properties:
-      RoleName: 'S3FullAccessRole'
+      RoleName: "S3FullAccessRole"
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
               Service:
                 - lambda.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
+              - "sts:AssumeRole"
 
   IAMS3FullAccessPolicy:
-    Type: 'AWS::IAM::Policy'
+    Type: "AWS::IAM::Policy"
     Properties:
-      PolicyName: 'S3FullAccessPolicy'
+      PolicyName: "S3FullAccessPolicy"
       PolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Action:
-              - 's3:*'
+              - "s3:*"
             Resource:
-              - 'arn:aws:s3:::*'
+              - "arn:aws:s3:::*"
       Roles:
         - !Ref IAMS3FullAccessRole
 
@@ -36,14 +36,14 @@ Resources:
       BucketName: !Sub "my-s3-bucket-${AWS::AccountId}-${AWS::Region}"
 
   BucketReadOnlyPolicy:
-    Type: 'AWS::S3::BucketPolicy'
+    Type: "AWS::S3::BucketPolicy"
     Properties:
       Bucket: !Ref S3Bucket
       PolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
-            Principal: '*'
+            Principal: "*"
             Action:
               - s3:Get*
               - s3:List*
@@ -52,28 +52,28 @@ Resources:
               - !Sub arn:aws:s3:::${S3Bucket}/*
 
   IAMS3ReadOnlyRole:
-    Type: 'AWS::IAM::Role'
+    Type: "AWS::IAM::Role"
     Properties:
-      RoleName: 'S3ReadOnlyRole'
+      RoleName: "S3ReadOnlyRole"
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
               Service:
                 - redshift.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
-  
+              - "sts:AssumeRole"
+
   IAMS3ReadOnlyPolicy:
-    Type: 'AWS::IAM::Policy'
+    Type: "AWS::IAM::Policy"
     Properties:
-      PolicyName: 'S3ReadOnlyAccess'
+      PolicyName: "S3ReadOnlyAccess"
       PolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
-            Action:               
+            Action:
               - s3:Get*
               - s3:List*
             Resource:
@@ -82,5 +82,3 @@ Resources:
               - !Sub arn:aws:s3:::${S3Bucket}/*/*
       Roles:
         - !Ref IAMS3ReadOnlyRole
-
-
